@@ -1,0 +1,39 @@
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_description">Description</a></li>
+<li><a href="#_cause">Cause</a></li>
+<li><a href="#_action">Action</a></li>
+<li><a href="#_effect">Effect</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_description">Description</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No controller release for controller-moved axis</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cause">Cause</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The error message 2.5.503 No controller release for controller-moved axis always occurs if an axis without controller enable is to be moved exclusively due to participation in a transformation. The additional information indicates which axis is involved.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_action">Action</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The controller enable is only active when the corresponding signal is present in NC_GlobalControl.dwDriveEnable (CODESYS V D1_005_CONTROLLER_ENABLE_W) and this state has been acknowledged by the relevant axis. It should be noted that a controller enable switching process in the drive controller can take some time, whereby the time can differ greatly even with identical controller types on different axes on a system.In order to exclude this error possibility, it is recommended to switch the controller enables selectively in the PLC, starting with the axes that are not involved in an interpolation at the time of the switching process. In case of missing controller enable this can be recognized by the set bits in NC_GlobalControl.dwMovingActive (CODESYS V D1_134_AXIS_MOVING_W). The end of the switch-on process of the controller enable can be recognized at NC_GlobalControl.dwDriveEnabled (CODESYS V D1_186_CONTROLLER_ENABLED).ExampleThe related additional information from the error log is: X rfg=1 vfg=1 enabled=0. I.e. the X axis (X) was meant, controller enable (rfg=1) and feed enable signal (vfg=1) of the PLC for the X axis were 1 and the switching operation of the controller enable was not yet completed (enabled=0).Example of a similar error situation with other axes:G233 Z1 ( Transformation: Korrektur der Z-Achse in Abhaengigkeit von X und Y ) G1 X10 Y50 ( Interpolation in der X/Y-Ebene )In the G1 set above, the previously inserted transformation results in an additional motion component of the Z axis, whereby this is not involved in the interpolation. If in this case the controller enable is active for the X and Y axis and this is not valid for the Z axis, then the mentioned error occurs. This situation can only occur if controller enables are switched on the PLC side during the running program or during a running modal travel movement.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_effect">Effect</h2>
+<div class="sectionbody">
+
+</div>
+</div>
